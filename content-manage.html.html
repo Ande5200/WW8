@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Exported Preview</title>
+  <style>
+    body { font-family: sans-serif; padding: 40px; line-height: 1.6; max-width: 900px; margin: 0 auto; background: #ffffff; color: #18181b; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 1em; }
+    th, td { padding: 8px 12px; border: 1px solid #e4e4e7; }
+    th { background-color: #f8f9fa; }
+    blockquote { border-left: 4px solid #4f46e5; padding-left: 16px; color: #71717a; margin: 0 0 1em 0; }
+    code { background: #f4f4f5; padding: 2px 4px; border-radius: 4px; color: #e11d48; }
+    pre code { display: block; padding: 1em; background: #f4f4f5; color: #18181b; overflow-x: auto; }
+.layout{min-width:1460px}
+.main{flex:none;width:1260px;padding:16px 24px}
+.card{overflow:visible}
+.row{flex-wrap:nowrap}
+.row>div{white-space:nowrap}
+.row input{width:220px}
+.row select{width:160px}
+table{width:100%;table-layout:fixed}
+th,td,.tag,a.op{white-space:nowrap}
+td{overflow:hidden;text-overflow:ellipsis}
+th:nth-child(1){width:80px}
+th:nth-child(2){width:280px}
+th:nth-child(3){width:220px}
+th:nth-child(4){width:190px}
+th:nth-child(5){width:130px}
+th:nth-child(6){width:100px}
+th:nth-child(7){width:190px}
+  </style>
+</head>
+<body>
+  
+<meta charset="UTF-8"><title>内容管理 - 原型</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font:14px -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;color:#000000e0;background:#f5f5f5}
+.layout{display:flex;min-height:100vh}.side{width:200px;background:#001529;color:#ffffffa6;padding-top:12px}
+.side .logo{color:#fff;font-weight:600;padding:8px 24px 16px}.side .grp{padding:10px 24px}.side .item{padding:10px 24px 10px 40px}
+.side .item.on{background:#1677ff;color:#fff}.main{flex:1;padding:16px 24px}.crumb{color:#00000073;margin-bottom:12px}
+.card{background:#fff;border-radius:8px;padding:20px 24px;margin-bottom:16px}
+.row{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:center}.row label{margin-right:8px}
+input,select{height:32px;border:1px solid #d9d9d9;border-radius:6px;padding:0 11px;font-size:14px;outline:none}
+input:focus,select:focus{border-color:#1677ff}input.err{border-color:#ff4d4f}
+.btn{height:32px;padding:0 15px;border-radius:6px;border:1px solid #d9d9d9;background:#fff;cursor:pointer;font-size:14px}
+.btn.pri{background:#1677ff;border-color:#1677ff;color:#fff}.btn.sm{height:24px;padding:0 7px;font-size:12px}
+.spacer{flex:1}table{width:100%;border-collapse:collapse}
+th{background:#fafafa;text-align:left;font-weight:600;padding:12px;border-bottom:1px solid #f0f0f0}
+td{padding:12px;border-bottom:1px solid #f0f0f0}tr:hover td{background:#fafafa}
+.tag{display:inline-block;padding:0 7px;border-radius:4px;font-size:12px;line-height:20px;border:1px solid}
+.tag.g{color:#389e0d;background:#f6ffed;border-color:#b7eb8f}.tag.r{color:#cf1322;background:#fff1f0;border-color:#ffa39e}
+a.op{color:#1677ff;cursor:pointer;margin-right:12px;text-decoration:none}a.op.danger{color:#ff4d4f}
+.pager{display:flex;justify-content:flex-end;gap:8px;align-items:center;margin-top:16px;color:#00000073}
+.pager .pg{min-width:32px;height:32px;border:1px solid #1677ff;color:#1677ff;border-radius:6px;display:flex;align-items:center;justify-content:center}
+.mask{position:fixed;inset:0;background:#00000073;display:none}.mask.on{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:820px;max-width:100%;background:#fff;display:flex;flex-direction:column;transform:translateX(100%);transition:.25s}
+.drawer.on{transform:none}.dh{padding:16px 24px;border-bottom:1px solid #f0f0f0;font-weight:600;font-size:16px;display:flex}
+.dh .x{margin-left:auto;cursor:pointer;color:#00000073}.db{padding:24px;overflow:auto;flex:1}
+.df{padding:10px 24px;border-top:1px solid #f0f0f0;display:flex;justify-content:flex-end;gap:8px}
+.fi{margin-bottom:20px}.fi .lb{margin-bottom:8px}.fi .lb .req{color:#ff4d4f;margin-right:4px}
+.fi input{width:100%}.cnt{float:right;color:#00000040;font-size:12px}.help{color:#ff4d4f;font-size:12px;margin-top:4px;min-height:18px}
+.hint{color:#00000073;font-size:12px;margin-top:4px}
+.tabs{display:flex;align-items:flex-end;border-bottom:1px solid #f0f0f0}
+.tab{padding:8px 16px;margin-right:2px;border:1px solid #f0f0f0;border-bottom:none;border-radius:8px 8px 0 0;background:#fafafa;cursor:pointer}
+.tab.on{background:#fff;color:#1677ff;margin-bottom:-1px}.tab .c{margin-left:8px;color:#00000073}
+.tabs .add{margin-left:auto;margin-bottom:6px;position:relative}
+.menu{position:absolute;right:0;top:30px;background:#fff;box-shadow:0 6px 16px #00000020;border-radius:8px;padding:4px;display:none;z-index:5;min-width:120px}
+.menu.on{display:block}.menu div{padding:5px 12px;border-radius:4px;cursor:pointer}.menu div:hover{background:#f5f5f5}
+.editor{border:1px solid #d9d9d9;border-top:none}.tb{padding:6px 8px;border-bottom:1px solid #f0f0f0;display:flex;gap:4px;flex-wrap:wrap}
+.tb span{padding:2px 8px;border-radius:4px;cursor:default;color:#555}.tb span.mode{border:1px solid #d9d9d9}
+.area{min-height:220px;padding:12px;outline:none}.radio label{margin-right:16px}
+.pop{position:fixed;background:#fff;box-shadow:0 6px 16px #00000026;border-radius:8px;padding:12px 16px;display:none;z-index:20;width:220px}
+.pop.on{display:block}.pop .t{margin-bottom:12px}.pop .t:before{content:"! ";color:#faad14;font-weight:700}
+.pop .b{display:flex;justify-content:flex-end;gap:8px}
+.toast{position:fixed;top:24px;left:50%;transform:translateX(-50%);background:#fff;box-shadow:0 6px 16px #00000026;border-radius:8px;padding:9px 12px;display:none;z-index:30}
+.toast.on{display:block}.empty{text-align:center;color:#00000040;padding:32px}
+</style>
+<div class="layout">
+<div class="side"><div class="logo">管理后台</div><div class="grp">运营管理</div>
+<div class="item">活动管理</div><div class="item">轮播图</div><div class="item">公告</div><div class="item on">内容管理</div></div>
+<div class="main">
+<div class="crumb">运营管理 / 内容管理</div>
+<div class="card"><div class="row">
+<div><label>标题</label><input id="qTitle" placeholder="请输入"></div>
+<div><label>Key</label><input id="qKey" placeholder="请输入"></div>
+<div><label>状态</label><select id="qStatus"><option value="">请选择</option><option value="ON">启用</option><option value="OFF">禁用</option></select></div>
+<button class="btn pri" onclick="render()">查询</button><button class="btn" onclick="resetQ()">重置</button>
+<div class="spacer"></div><button class="btn pri" onclick="openDrawer()">+ 新增</button></div></div>
+<div class="card"><table><thead><tr><th style="width:70px">ID</th><th>标题</th><th>Key</th><th>修改时间</th><th>修改人</th><th>状态</th><th style="width:200px">操作</th></tr></thead>
+<tbody id="tb"></tbody></table><div class="pager"><span id="total"></span><span class="pg">1</span><select><option>10 条/页</option></select></div></div>
+</div></div>
+<div class="mask" id="mask" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+<div class="dh"><span id="dTitle">新增内容</span><span class="x" onclick="closeDrawer()">✕</span></div>
+<div class="db">
+<div class="fi"><div class="lb"><span class="req">*</span>标题<span class="cnt" id="cTitle">0/50</span></div>
+<input id="fTitle" maxlength="50" placeholder="请输入英文标题" oninput="cnt('fTitle','cTitle',50)"><div class="help" id="eTitle"></div></div>
+<div class="fi"><div class="lb"><span class="req">*</span>Key<span class="cnt" id="cKey">0/20</span></div>
+<input id="fKey" maxlength="20" placeholder="字母、数字、- 或 _" oninput="cnt('fKey','cKey',20)"><div class="help" id="eKey"></div>
+<div class="hint">同一站点内不能重复；修改 Key 后，前台引用需同步修改</div></div>
+<div class="fi" style="display:none"><div class="lb">状态</div><div class="radio"><label><input type="radio" name="st" value="ON" style="height:auto"> 启用</label><label><input type="radio" name="st" value="OFF" style="height:auto"> 禁用</label></div></div>
+<div class="fi"><div class="lb"><span class="req">*</span>内容</div>
+<div class="tabs" id="tabs"></div>
+<div class="editor"><div class="tb"><span class="mode">可视 | 源码</span><span><b>B</b></span><span><i>I</i></span><span><u>U</u></span><span>H1</span><span>H2</span><span>列表</span><span>链接</span><span>图片</span><span>表格</span></div>
+<div class="area" id="area" contenteditable="true"></div></div>
+<div class="help" id="eContent"></div></div>
+</div>
+<div class="df"><button class="btn" onclick="closeDrawer()">取消</button><button class="btn pri" onclick="save()">保存</button></div>
+</div>
+<div class="pop" id="pop"><div class="t" id="popT"></div><div class="b"><button class="btn sm" onclick="hidePop()">取消</button><button class="btn sm pri" id="popOk">确定</button></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const LANGS={en:'English',zh:'中文',ms:'Melayu'};
+let seq=4,data=[
+{id:1,title:'About Us',key:'aboutus',time:'2026-11-08 12:00:00',user:'admin',status:'ON',i18n:{en:{title:'About Us',content:'<p>About us content...</p>'}}},
+{id:2,title:'Privacy Policy',key:'privacy',time:'2026-11-07 18:30:00',user:'admin',status:'ON',i18n:{en:{title:'Privacy Policy',content:'<p>Privacy...</p>'},zh:{title:'隐私政策',content:'<p>隐私政策内容</p>'}}},
+{id:3,title:'FAQ',key:'faq',time:'2026-11-06 09:15:00',user:'operator01',status:'OFF',i18n:{en:{title:'FAQ',content:'<p>FAQ...</p>'}}}];
+let editing=null,form=null,cur='en';
+const $=id=>document.getElementById(id);
+const now=()=>new Date().toISOString().slice(0,19).replace('T',' ');
+function toast(m){$('toast').textContent=m;$('toast').classList.add('on');setTimeout(()=>$('toast').classList.remove('on'),1600)}
+function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function render(){
+const t=$('qTitle').value.trim().toLowerCase(),k=$('qKey').value.trim().toLowerCase(),s=$('qStatus').value;
+const rows=data.filter(r=>(!t||Object.values(r.i18n).some(x=>(x.title||'').toLowerCase().includes(t)))&&(!k||r.key.toLowerCase()===k)&&(!s||r.status===s))
+.sort((a,b)=>b.time.localeCompare(a.time));
+$('tb').innerHTML=rows.length?rows.map(r=>`<tr><td>${r.id}</td><td>${esc(r.title)}</td><td>${esc(r.key)}</td><td>${r.time}</td><td>${r.user}</td>
+<td>${r.status==='ON'?'<span class="tag g">启用</span>':'<span class="tag r">禁用</span>'}</td>
+<td><a class="op" onclick="openDrawer(${r.id})">编辑</a>${r.status==='ON'
+?`<a class="op danger" onclick="confirmPop(event,'确定禁用吗？',()=>setSt(${r.id},'OFF'))">禁用</a>`
+:`<a class="op" onclick="confirmPop(event,'确定启用吗？',()=>setSt(${r.id},'ON'))">启用</a><a class="op danger" onclick="confirmPop(event,'确定删除吗？删除后不可恢复',()=>del(${r.id}))">删除</a>`}</td></tr>`).join('')
+:'<tr><td colspan="7" class="empty">暂无数据</td></tr>';
+$('total').textContent=`共 ${rows.length} 条`;
+}
+function resetQ(){$('qTitle').value='';$('qKey').value='';$('qStatus').value='';render()}
+function setSt(id,s){const r=data.find(x=>x.id===id);r.status=s;r.time=now();r.user='admin';render();toast(s==='ON'?'已启用':'已禁用')}
+function del(id){data=data.filter(x=>x.id!==id);render();toast('已删除')}
+function confirmPop(e,msg,ok){const p=$('pop');$('popT').textContent=msg;p.style.left=Math.min(e.clientX-110,innerWidth-240)+'px';p.style.top=(e.clientY+12)+'px';p.classList.add('on');$('popOk').onclick=()=>{hidePop();ok()};e.stopPropagation()}
+function hidePop(){$('pop').classList.remove('on')}
+document.addEventListener('click',e=>{if(!$('pop').contains(e.target))hidePop();if(!e.target.closest('.add'))document.querySelectorAll('.menu').forEach(m=>m.classList.remove('on'))});
+function cnt(i,c,max){$(c).textContent=$(i).value.length+'/'+max}
+function openDrawer(id){
+editing=id?data.find(x=>x.id===id):null;
+form=editing?JSON.parse(JSON.stringify(editing.i18n)):{en:{title:'',content:''}};
+$('dTitle').textContent=editing?'编辑内容':'新增内容';
+$('fTitle').value=editing?editing.title:'';$('fKey').value=editing?editing.key:'';
+document.querySelector(`input[name=st][value=${editing?editing.status:'OFF'}]`).checked=true;
+['eTitle','eKey','eContent'].forEach(x=>$(x).textContent='');['fTitle','fKey'].forEach(x=>$(x).classList.remove('err'));
+cnt('fTitle','cTitle',50);cnt('fKey','cKey',20);cur='en';drawTabs();
+$('mask').classList.add('on');$('drawer').classList.add('on');
+}
+function closeDrawer(){$('mask').classList.remove('on');$('drawer').classList.remove('on')}
+function keep(){form[cur].content=$('area').innerHTML;if(cur!=='en'){const t=$('langTitle');if(t)form[cur].title=t.value}}
+function drawTabs(){
+const rest=Object.keys(LANGS).filter(l=>!form[l]);
+$('tabs').innerHTML=Object.keys(form).map(l=>`<div class="tab ${l===cur?'on':''}" onclick="sw('${l}')">${LANGS[l]}${l==='en'?'（默认）':`<span class="c" onclick="rm(event,'${l}')">✕</span>`}</div>`).join('')
++(rest.length?`<div class="add"><button class="btn sm" onclick="this.nextElementSibling.classList.toggle('on')">+ 添加语言</button><div class="menu">${rest.map(l=>`<div onclick="addL('${l}')">${LANGS[l]}</div>`).join('')}</div></div>`:'');
+const area=$('area');area.innerHTML=form[cur].content||'';
+const old=$('langTitleBox');if(old)old.remove();
+if(cur!=='en'){const d=document.createElement('div');d.id='langTitleBox';d.style.padding='8px 12px';d.style.borderBottom='1px solid #f0f0f0';
+d.innerHTML=`<input id="langTitle" maxlength="50" style="width:100%" placeholder="${LANGS[cur]}标题（选填，留空用英文）" value="${esc(form[cur].title||'')}">`;
+area.parentNode.insertBefore(d,area.previousElementSibling)}
+area.setAttribute('data-ph',cur==='en'?'请输入英文内容':'选填，留空时前台显示英文');
+}
+function sw(l){keep();cur=l;drawTabs()}
+function addL(l){keep();form[l]={title:'',content:''};cur=l;drawTabs()}
+function rm(e,l){e.stopPropagation();keep();delete form[l];if(cur===l)cur='en';drawTabs()}
+function save(){
+keep();let ok=true;const title=$('fTitle').value.trim(),key=$('fKey').value.trim();
+const set=(f,e,m)=>{$(e).textContent=m;if(f)$(f).classList.toggle('err',!!m);if(m)ok=false};
+set('fTitle','eTitle',!title?'请输入标题':'');
+set('fKey','eKey',!key?'请输入 Key':!/^[A-Za-z0-9_-]+$/.test(key)?'只允许字母、数字、- 和 _'
+:data.some(r=>r.key.toLowerCase()===key.toLowerCase()&&(!editing||r.id!==editing.id))?'Key 已存在':'');
+const txt=form.en.content.replace(/<[^>]*>/g,'').trim();set(null,'eContent',!txt?'请输入英文内容':'');
+if(!ok)return;
+form.en.title=title;Object.keys(form).forEach(l=>{if(l!=='en'&&!form[l].title&&!form[l].content.replace(/<[^>]*>/g,'').trim())delete form[l]});
+const st=document.querySelector('input[name=st]:checked').value;
+if(editing)Object.assign(editing,{title,key,status:st,i18n:form,time:now(),user:'admin'});
+else data.push({id:seq++,title,key,status:st,i18n:form,time:now(),user:'admin'});
+closeDrawer();render();toast('保存成功');
+}
+render();
+</script>
+</body>
+</html>
