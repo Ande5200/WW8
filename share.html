@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>编辑奖励配置 · 推荐佣金</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:rgba(0,0,0,.45);font:14px/1.5715 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;color:rgba(0,0,0,.88);min-height:100vh;padding:48px 0}
+.modal{width:760px;margin:0 auto;background:#fff;border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.08);padding:20px 24px}
+.hd{font-size:16px;font-weight:600;display:flex;justify-content:space-between;margin-bottom:8px}
+.hd .x{color:rgba(0,0,0,.45);cursor:pointer;font-weight:400;font-size:18px}
+.desc{color:rgba(0,0,0,.45);margin:0 0 16px}
+.item{margin-bottom:20px}
+.item label{display:block;margin-bottom:8px}
+.req{color:#ff4d4f;margin-right:4px}
+.inp{display:flex;align-items:center;border:1px solid #d9d9d9;border-radius:6px;height:32px;padding:0 11px;background:#fff}
+.inp:focus-within{border-color:#1677ff;box-shadow:0 0 0 2px rgba(5,145,255,.1)}
+.inp input{flex:1;border:0;outline:0;font-size:14px;min-width:0;padding:0}
+.inp input::placeholder{color:rgba(0,0,0,.25)}
+.inp .pre{color:rgba(0,0,0,.45);margin-right:6px}
+.inp .suf{color:rgba(0,0,0,.88);margin-left:6px}
+.w350{width:348px}
+.hint{color:rgba(0,0,0,.45);margin:4px 0 12px}
+.tabs{display:flex;gap:32px;border-bottom:1px solid #f0f0f0;margin-bottom:16px}
+.tab{padding:8px 0;cursor:pointer;position:relative}
+.tab.on{color:#1677ff}
+.tab.on::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#1677ff}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0 16px}
+.extra{color:rgba(0,0,0,.45);font-size:12px;margin-top:4px}
+.divider{display:flex;align-items:center;gap:12px;margin:12px 0 16px;font-weight:600}
+.divider::before,.divider::after{content:"";height:1px;background:#f0f0f0;flex:1}
+.divider::before{flex:0 0 0}
+.new{font-size:12px;font-weight:400;color:#cf1322;background:#fff1f0;border:1px solid #ffa39e;border-radius:4px;padding:0 6px;line-height:20px}
+.sw{width:44px;height:22px;border-radius:11px;background:#1677ff;position:relative;cursor:pointer;display:inline-block;vertical-align:middle}
+.sw::after{content:"";position:absolute;top:2px;left:24px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s}
+.sw.off{background:rgba(0,0,0,.25)}
+.sw.off::after{left:2px}
+.swtxt{margin-left:8px;color:rgba(0,0,0,.45);font-size:12px}
+.ft{text-align:right;margin-top:8px}
+.btn{height:32px;padding:0 15px;border-radius:6px;border:1px solid #d9d9d9;background:#fff;cursor:pointer;margin-left:8px;font-size:14px}
+.btn.primary{background:#1677ff;border-color:#1677ff;color:#fff}
+.preview{background:#fafafa;border:1px dashed #d9d9d9;border-radius:6px;padding:10px 14px;font-size:13px;color:rgba(0,0,0,.65)}
+.preview b{color:#1677ff;font-weight:600}
+</style>
+</head>
+<body>
+<div class="modal">
+<div class="hd">编辑奖励配置 · 推荐佣金<span class="x">✕</span></div>
+<p class="desc">被推荐好友在每个平台的主钱包有效投注 × 这个平台的比例，每天发给推荐人</p>
+
+<!-- 现有：不变 -->
+<div class="item">
+<label><span class="req">*</span>默认比例</label>
+<div class="inp w350"><input value="0.1000"><span class="suf">%</span></div>
+</div>
+<div class="hint">各平台单独的比例，留空用默认比例；同一个平台在不同大类下分开设</div>
+<div class="tabs" id="tabs"></div>
+<div class="grid" id="plat"></div>
+
+<!-- 新增：推荐好友奖励 -->
+<div class="divider">推荐好友奖励（一次性）<span class="new">新增</span></div>
+<p class="desc">受邀人注册后在统计天数内累计存款达到门槛，邀请人和受邀人各发一次奖励到奖励中心；命中防刷规则的转人工审核（奖励记录中审核）。与上方推荐佣金同时生效。</p>
+
+<div class="item">
+<label>启用</label>
+<span class="sw" onclick="this.classList.toggle('off');document.getElementById('swt').textContent=this.classList.contains('off')?'已禁用：不再发放，前台隐藏活动亮点和推荐奖励详情':'已启用'"></span>
+<span class="swtxt" id="swt">已启用</span>
+</div>
+
+<div class="grid">
+<div class="item">
+<label><span class="req">*</span>邀请人奖励</label>
+<div class="inp"><span class="pre">MYR</span><input id="a1" value="30" oninput="pv()"></div>
+</div>
+
+<div class="item">
+<label><span class="req">*</span>受邀人奖励</label>
+<div class="inp"><span class="pre">MYR</span><input id="a2" value="20" oninput="pv()"></div>
+</div>
+<div class="item">
+<label><span class="req">*</span>打码倍数</label>
+<div class="inp"><span class="pre">x</span><input id="w" value="1" oninput="pv()"></div>
+</div>
+<div class="item">
+<label><span class="req">*</span>统计天数</label>
+<div class="inp"><input id="d" value="30" oninput="pv()"><span class="suf">天</span></div>
+<div class="extra">从受邀人注册日起算</div>
+</div>
+<div class="item">
+<label><span class="req">*</span>累计存款门槛</label>
+<div class="inp"><span class="pre">MYR</span><input id="t" value="300" oninput="pv()"></div>
+<div class="extra">只算成功到账的存款</div>
+</div>
+<div class="item">
+<label><span class="req">*</span>有效期（天）</label>
+<div class="inp"><input value="7"><span class="suf">天</span></div>
+<div class="extra">填 0 = 不过期</div>
+</div>
+</div>
+
+<div class="item">
+<label>前台活动亮点预览</label>
+<div class="preview" id="pv"></div>
+</div>
+
+<div class="ft"><button class="btn">取 消</button><button class="btn primary">确 定</button></div>
+</div>
+<script>
+var data={'体育':['BTi Sports','SABA Sports','CMD368'],'真人':['Evolution','Pragmatic Live','SA Gaming'],'电子':['PG Soft','Pragmatic Play','JILI'],'捕鱼':['JILI Fishing','FA CHAI','KA Gaming'],'彩票':['4D Lotto']};
+var cnt={'体育':3,'真人':10,'电子':17,'捕鱼':7,'彩票':1};
+function tab(k){
+document.getElementById('tabs').innerHTML=Object.keys(data).map(function(n){return '<div class="tab'+(n===k?' on':'')+'" onclick="tab(\''+n+'\')">'+n+' ('+cnt[n]+')</div>'}).join('');
+document.getElementById('plat').innerHTML=data[k].map(function(p){return '<div class="item"><label>'+p+'</label><div class="inp"><input placeholder="用默认"><span class="suf">%</span></div></div>'}).join('');
+}
+function v(id){return document.getElementById(id).value||'-'}
+function pv(){
+document.getElementById('pv').innerHTML='• 推荐好友人数无限制<br>• 推荐人可获得 MYR <b>'+v('a1')+'</b><br>• 被推荐人可获得 MYR <b>'+v('a2')+'</b><br>• 注册后 <b>'+v('d')+'</b> 天内累计充值 MYR <b>'+v('t')+'</b> 即可符合资格<br>• 仅需完成 <b>'+v('w')+'</b> 倍流水';
+}
+tab('体育');pv();
+</script>
+</body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>奖励记录 - 审核原型</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f5f5f5;font:13px/1.5715 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;color:rgba(0,0,0,.88)}
+.layout{min-width:1680px}
+.tabsbar{display:flex;gap:4px;background:#fff;padding:6px 8px 0;border-bottom:1px solid #f0f0f0}
+.tabsbar span{padding:4px 12px;border:1px solid #f0f0f0;border-bottom:0;border-radius:4px 4px 0 0;background:#fafafa;font-size:12px}
+.tabsbar span.on{background:#fff;color:#1677ff}
+.main{padding:12px 16px}
+.crumb{color:rgba(0,0,0,.45);font-size:12px}
+.crumb b{color:rgba(0,0,0,.88);font-weight:400}
+.title{margin:12px 0;font-size:18px;font-weight:600}
+.title small{font-size:12px;color:rgba(0,0,0,.45);font-weight:400;margin-left:8px}
+.card{background:#fff;border-radius:8px;padding:20px 24px;margin-bottom:12px}
+.search{display:grid;grid-template-columns:repeat(3,1fr);gap:16px 48px}
+.f{display:flex;align-items:center}
+.f label{width:80px;text-align:right;margin-right:8px;white-space:nowrap}
+.f input,.f select{flex:1;height:32px;border:1px solid #d9d9d9;border-radius:6px;padding:0 11px;font-size:13px;background:#fff}
+.btns{grid-column:3;text-align:right}
+.btn{height:32px;padding:0 15px;border-radius:6px;border:1px solid #d9d9d9;background:#fff;cursor:pointer;margin-left:8px;font-size:13px;white-space:nowrap}
+.btn.primary{background:#1677ff;border-color:#1677ff;color:#fff}
+.btn.warn{border-color:#faad14;color:#d48806}
+.btn.warn i{font-style:normal;background:#ff4d4f;color:#fff;border-radius:10px;padding:0 6px;margin-left:4px;font-size:12px}
+.toolbar{display:flex;justify-content:flex-end;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+th,td{padding:10px 8px;border-bottom:1px solid #f0f0f0;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+th{background:#fafafa;font-weight:600}
+tr.pair td{background:#fffbe6}
+a{color:#1677ff;cursor:pointer;text-decoration:none}
+.green{color:#52c41a;font-weight:600}
+.tag{display:inline-block;padding:0 7px;font-size:12px;line-height:20px;border-radius:4px;border:1px solid}
+.t-orange{color:#d46b08;background:#fff7e6;border-color:#ffd591}
+.t-green{color:#389e0d;background:#f6ffed;border-color:#b7eb8f}
+.t-default{color:rgba(0,0,0,.88);background:#fafafa;border-color:#d9d9d9}
+.t-gold{color:#d48806;background:#fffbe6;border-color:#ffe58f}
+.t-red{color:#cf1322;background:#fff1f0;border-color:#ffa39e}
+.op a{margin-right:12px}
+.op a.danger{color:#ff4d4f}
+.pager{text-align:right;margin-top:12px;color:rgba(0,0,0,.65)}
+.mask{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center}
+.mask.show{display:flex}
+.dlg{background:#fff;border-radius:8px;width:520px;padding:20px 24px}
+.dlg h3{margin:0 0 16px;font-size:16px}
+.dlg .row{display:flex;padding:6px 0;border-bottom:1px dashed #f0f0f0}
+.dlg .row span:first-child{width:110px;color:rgba(0,0,0,.45)}
+.dlg textarea{width:100%;height:80px;border:1px solid #d9d9d9;border-radius:6px;padding:8px;font:inherit}
+.dlg .ft{text-align:right;margin-top:16px}
+.hit{color:#cf1322}
+.tip{background:#fffbe6;border:1px solid #ffe58f;border-radius:6px;padding:8px 12px;margin-bottom:12px}
+</style>
+</head>
+<body>
+<div class="layout">
+<div class="tabsbar"><span>仪表盘 ✕</span><span>奖励配置 ✕</span><span class="on">奖励记录 ✕</span><span>会员等级 ✕</span></div>
+<div class="main">
+<div class="crumb">会员权益 / <b>奖励记录</b></div>
+<div class="title">奖励记录<small>奖励中心生成和领取的记录（当前站点）</small></div>
+
+<div class="card">
+<div class="search">
+<div class="f"><label>会员：</label><input placeholder="请输入"></div>
+<div class="f"><label>奖励类型：</label><select id="qType"><option value="">请选择</option><option>返水</option><option>生日礼金</option><option>每周救援金</option><option>晋级奖金</option><option>体验金</option><option>会员赠送</option><option value="推荐奖励">推荐奖励（新增）</option></select></div>
+<div class="f"><label>生成时间：</label><input value="2026-11-08 → 2026-11-08"></div>
+<div class="f"><label>状态：</label><select id="qStatus"><option value="">请选择</option><option value="待审核">待审核（新增）</option><option>待领取</option><option>已领取</option><option>已过期</option><option value="已拒绝">已拒绝（新增）</option></select></div>
+<div></div>
+<div class="btns"><button class="btn" onclick="reset()">重 置</button><button class="btn primary" onclick="render()">查 询</button></div>
+</div>
+</div>
+
+<div class="card">
+<div class="toolbar">
+<button class="btn warn" onclick="quick()">推荐奖励待审核<i id="cnt">0</i></button>
+<button class="btn">⟳ 刷新</button>
+</div>
+<table>
+<colgroup>
+<col style="width:100px"><col style="width:100px"><col style="width:190px"><col style="width:100px"><col style="width:60px"><col style="width:80px">
+<col style="width:160px"><col style="width:160px"><col style="width:160px"><col style="width:80px"><col style="width:90px"><col style="width:160px"><col style="width:110px">
+</colgroup>
+<thead><tr>
+<th>会员</th><th>奖励类型</th><th>说明</th><th>金额</th><th>打码</th><th>适用范围</th>
+<th>生成时间</th><th>过期时间</th><th>领取时间</th><th>状态</th><th>审核人</th><th>审核时间</th><th>操作</th>
+</tr></thead>
+<tbody id="tb"></tbody>
+</table>
+<div class="pager" id="pager"></div>
+</div>
+</div>
+</div>
+
+<!-- 详情 -->
+<div class="mask" id="mDetail"><div class="dlg"><h3>推荐奖励详情</h3><div id="detailBody"></div><div class="ft"><button class="btn" onclick="hide('mDetail')">关 闭</button></div></div></div>
+<!-- 通过 -->
+<div class="mask" id="mPass"><div class="dlg"><h3>确认通过审核？</h3><div class="tip">将同时通过邀请人 <b id="pI"></b> 和受邀人 <b id="pE"></b> 的推荐奖励，发放至双方奖励中心，有效期从现在起算。审核后不可撤销。</div><div class="ft"><button class="btn" onclick="hide('mPass')">取 消</button><button class="btn primary" onclick="doPass()">确认通过</button></div></div></div>
+<!-- 拒绝 -->
+<div class="mask" id="mReject"><div class="dlg"><h3>拒绝推荐奖励</h3><div class="tip">将同时拒绝邀请人 <b id="rI"></b> 和受邀人 <b id="rE"></b> 的推荐奖励，双方均不发放。审核后不可撤销。</div><div style="margin-bottom:8px"><span style="color:#ff4d4f">*</span> 拒绝原因</div><textarea id="reason" placeholder="请输入拒绝原因（必填，最多 200 字）" maxlength="200"></textarea><div class="ft"><button class="btn" onclick="hide('mReject')">取 消</button><button class="btn primary" style="background:#ff4d4f;border-color:#ff4d4f" onclick="doReject()">确认拒绝</button></div></div></div>
+
+<script>
+var rows=[
+{id:1,pair:'P1',m:'alice88',type:'推荐奖励',role:'邀请人',inviter:'alice88',invitee:'bob_01',amt:30,w:10,scope:'主钱包',ct:'2026-11-08 18:20:11',et:'-',clt:'-',st:'待审核',hit:'同 IP、同设备',dep:320,qt:'2026-11-08 18:20:11'},
+{id:2,pair:'P1',m:'bob_01',type:'推荐奖励',role:'受邀人',inviter:'alice88',invitee:'bob_01',amt:20,w:10,scope:'主钱包',ct:'2026-11-08 18:20:11',et:'-',clt:'-',st:'待审核',hit:'同 IP、同设备',dep:320,qt:'2026-11-08 18:20:11'},
+{id:3,pair:'P2',m:'kenny',type:'推荐奖励',role:'邀请人',inviter:'kenny',invitee:'lily2026',amt:30,w:1,scope:'主钱包',ct:'2026-11-08 15:02:45',et:'2026-11-15 15:02:45',clt:'-',st:'待领取',dep:500,qt:'2026-11-08 15:02:45'},
+{id:4,pair:'P2',m:'lily2026',type:'推荐奖励',role:'受邀人',inviter:'kenny',invitee:'lily2026',amt:20,w:1,scope:'主钱包',ct:'2026-11-08 15:02:45',et:'2026-11-15 15:02:45',clt:'2026-11-08 15:10:02',st:'已领取',dep:500,qt:'2026-11-08 15:02:45'},
+{id:5,pair:'P3',m:'tommy',type:'推荐奖励',role:'邀请人',inviter:'tommy',invitee:'tommy_b',amt:30,w:1,scope:'主钱包',ct:'2026-11-08 10:11:20',et:'-',clt:'-',st:'已拒绝',hit:'同真实姓名、同银行账户',dep:300,qt:'2026-11-08 10:11:20',auditor:'admin01',at:'2026-11-08 11:30:05',reason:'同一人多账户刷推荐'},
+{id:6,pair:'P3',m:'tommy_b',type:'推荐奖励',role:'受邀人',inviter:'tommy',invitee:'tommy_b',amt:20,w:1,
+scope:'主钱包',ct:'2026-11-08 10:11:20',et:'-',clt:'-',st:'已拒绝',hit:'同真实姓名、同银行账户',dep:300,qt:'2026-11-08 10:11:20',auditor:'admin01',at:'2026-11-08 11:30:05',reason:'同一人多账户刷推荐'},
+{id:7,m:'jackson',type:'体验金',desc:'体验金',amt:18,w:10,scope:'主钱包',ct:'2026-11-08 19:06:10',et:'2026-11-15 18:06:10',clt:'2026-11-08 19:06:10',st:'已领取'}
+];
+var tagCls={'待审核':'t-gold','待领取':'t-orange','已领取':'t-green','已过期':'t-default','已拒绝':'t-red'};
+var cur=null;
+function $(id){return document.getElementById(id)}
+function now(){var d=new Date(),p=function(n){return('0'+n).slice(-2)};return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds())}
+function plus7(s){var d=new Date(s.replace(' ','T'));d.setDate(d.getDate()+7);var p=function(n){return('0'+n).slice(-2)};return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+s.slice(11)}
+function render(){
+var qt=$('qType').value,qs=$('qStatus').value;
+var list=rows.filter(function(r){return(!qt||r.type===qt)&&(!qs||r.st===qs)});
+$('tb').innerHTML=list.map(function(r){
+var desc=r.type==='推荐奖励'?'<a onclick="detail('+r.id+')">'+r.role+' · '+(r.role==='邀请人'?'受邀人 '+r.invitee:'邀请人 '+r.inviter)+'</a>':r.desc;
+var op=r.st==='待审核'?'<span class="op"><a onclick="pass('+r.id+')">通过</a><a class="danger" onclick="reject('+r.id+')">拒绝</a></span>':(r.type==='推荐奖励'?'<a onclick="detail('+r.id+')">详情</a>':'-');
+return '<tr class="'+(r.st==='待审核'?'pair':'')+'"><td><a>'+r.m+'</a></td><td>'+r.type+'</td><td>'+desc+'</td><td class="green">+RM '+r.amt.toFixed(2)+'</td><td>x'+r.w+'</td><td>'+r.scope+'</td><td>'+r.ct+'</td><td>'+r.et+'</td><td>'+r.clt+'</td><td><span class="tag '+tagCls[r.st]+'">'+r.st+'</span></td><td>'+(r.auditor||'-')+'</td><td>'+(r.at||'-')+'</td><td>'+op+'</td></tr>';
+}).join('');
+$('pager').textContent='第 1-'+list.length+' 条/总共 '+list.length+' 条';
+$('cnt').textContent=new Set(rows.filter(function(r){return r.st==='待审核'}).map(function(r){return r.pair})).size;
+}
+function reset(){$('qType').value='';$('qStatus').value='';render()}
+function quick(){$('qType').value='推荐奖励';$('qStatus').value='待审核';render()}
+function get(id){return rows.filter(function(r){return r.id===id})[0]}
+function pairOf(r){return rows.filter(function(x){return x.pair===r.pair})}
+function show(id){$(id).classList.add('show')}
+function hide(id){$(id).classList.remove('show')}
+function detail(id){
+var r=get(id),ps=pairOf(r),inv=ps.filter(function(x){return x.role==='邀请人'})[0],ee=ps.filter(function(x){return x.role==='受邀人'})[0];
+var h=[['邀请人',r.inviter+'（奖励 RM '+inv.amt.toFixed(2)+'，'+inv.st+'）'],['受邀人',r.invitee+'（奖励 RM '+ee.amt.toFixed(2)+'，'+ee.st+'）'],['统计期累计存款','RM '+r.dep.toFixed(2)+'（门槛 RM 300.00）'],['达标时间',r.qt],['命中原因',r.hit?'<span class="hit">'+r.hit+'</span>':'未命中，自动发放']];
+if(r.auditor)h.push(['审核人',r.auditor],['审核时间',r.at]);
+if(r.reason)h.push(['拒绝原因','<span class="hit">'+r.reason+'</span>']);
+$('detailBody').innerHTML=h.map(function(x){return '<div class="row"><span>'+x[0]+'</span><span>'+x[1]+'</span></div>'}).join('');
+show('mDetail');
+}
+function pass(id){cur=get(id);$('pI').textContent=cur.inviter;$('pE').textContent=cur.invitee;show('mPass')}
+function reject(id){cur=get(id);$('rI').textContent=cur.inviter;$('rE').textContent=cur.invitee;$('reason').value='';show('mReject')}
+function doPass(){var t=now();pairOf(cur).forEach(function(r){r.st='待领取';r.auditor='admin';r.at=t;r.et=plus7(t)});hide('mPass');render()}
+function doReject(){var v=$('reason').value.trim();if(!v){alert('请输入拒绝原因');return}var t=now();pairOf(cur).forEach(function(r){r.st='已拒绝';r.auditor='admin';r.at=t;r.reason=v});hide('mReject');render()}
+render();
+</script>
+</body>
+</html>
