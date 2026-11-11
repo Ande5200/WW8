@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VIP 中心 · 合并版原型</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#e9ebef;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;display:flex;justify-content:center;padding:20px 0}
+.phone{width:390px;min-height:844px;background:#1f2330;border-radius:28px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.25);padding-bottom:30px}
+.top{display:flex;align-items:center;gap:12px;padding:16px;color:#fff;font-size:18px;font-weight:600}
+.top .back{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.12);display:grid;place-items:center;font-size:16px}
+.tabs{display:flex;gap:6px;padding:0 12px 4px;overflow-x:auto}
+.tab{flex:1;min-width:52px;text-align:center;padding:8px 0;border-radius:18px;font-size:13px;color:rgba(255,255,255,.55);background:rgba(255,255,255,.06);cursor:pointer;position:relative}
+.tab.on{background:#f5a623;color:#1f2330;font-weight:700}
+.tab .me{position:absolute;top:-6px;right:-2px;font-size:9px;background:#22c55e;color:#fff;border-radius:6px;padding:1px 4px}
+.card{margin:12px;border-radius:16px;padding:16px;background:linear-gradient(135deg,#e8ecf6,#cfd6ea)}
+.card.high{background:linear-gradient(135deg,#fff3d6,#f6d58b)}
+.card.low{background:linear-gradient(135deg,#eceff3,#dfe3e8)}
+.card .sub{font-size:12px;color:#5b6475}
+.card h1{font-size:30px;margin:4px 0 10px;color:#1f2330}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:6px;vertical-align:middle}
+.b-cur{background:#1f2330;color:#fff}.b-ok{background:#22c55e;color:#fff}.b-lock{background:#f97316;color:#fff}
+.prog{background:rgba(255,255,255,.65);border-radius:12px;padding:12px}
+.prog .row{display:flex;justify-content:space-between;font-size:13px;color:#1f2330}
+.bar{height:8px;background:#d9dde5;border-radius:4px;margin:8px 0}
+.bar i{display:block;height:100%;background:#f97316;border-radius:4px}
+.prog .tip{font-size:12px;color:#5b6475}
+.keep{margin-top:8px;font-size:12px;color:#15803d;background:#ecfdf3;border-radius:8px;padding:6px 10px}
+.sec{display:flex;justify-content:space-between;align-items:center;margin:18px 16px 10px;color:#fff}
+.sec h2{font-size:17px}.sec a{font-size:13px;color:#f5a623;text-decoration:none}
+.group{margin:8px 16px 6px;font-size:12px;color:rgba(255,255,255,.45)}
+.item{display:flex;align-items:center;gap:12px;margin:0 12px 10px;background:#fff;border-radius:14px;padding:12px}
+.ic{flex:none;width:42px;height:42px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:700}
+.mid{flex:1;min-width:0}
+.mid .n{font-size:15px;font-weight:600;color:#1f2330}
+.mid .d{font-size:12px;color:#8a92a3;margin-top:3px;line-height:1.5}
+.right{text-align:right;flex:none;max-width:150px}
+.right .v{font-size:15px;font-weight:700;color:#1f2330}
+.plus{color:#16a34a;font-size:12px;font-weight:600;margin-left:3px}
+.st{display:inline-block;margin-top:5px;font-size:11px;padding:3px 9px;border-radius:10px;background:#eef1f5;color:#6b7385}
+.st.go{background:#f97316;color:#fff;font-size:13px;padding:4px 14px;cursor:pointer;border:0}
+.st.done{background:#e7f8ee;color:#16a34a}
+.st.lock{background:#fff1e6;color:#ea580c}
+.rb{display:grid;grid-template-columns:repeat(3,auto);gap:2px 10px;font-size:12px;color:#5b6475;margin-top:4px}
+.rb b{color:#1f2330}
+.cta{display:block;margin:6px 12px 0;padding:13px;border-radius:24px;border:0;width:calc(100% - 24px);background:linear-gradient(90deg,#128afb,#004fff);color:#fff;font-size:15px;font-weight:600}
+.more{margin:16px 12px 0;background:#fff;border-radius:14px;overflow:hidden}
+.more summary{padding:14px;font-size:14px;color:#1f2330;cursor:pointer;list-style:none;display:flex;justify-content:space-between}
+.more summary::after{content:"展开 ›";color:#2563eb;font-size:13px}
+.more[open] summary::after{
+    content:"收起"}
+.tbl{overflow-x:auto;padding:0 10px 10px}
+table{border-collapse:collapse;font-size:12px;white-space:nowrap}
+th,td{padding:8px 10px;border-bottom:1px solid #f0f2f5;text-align:center;color:#1f2330}
+th:first-child,td:first-child{text-align:left;color:#5b6475;position:sticky;left:0;background:#fff}
+.hl{background:#fff4e5;color:#ea580c;font-weight:700}
+.note{font-size:11px;color:#8a92a3;padding:0 14px 12px}
+.toast{position:fixed;left:50%;top:40%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:10px 18px;border-radius:8px;font-size:14px;display:none}
+</style>
+</head>
+<body>
+<div class="phone">
+<div class="top"><span class="back">←</span>VIP 俱乐部</div>
+<div class="tabs" id="tabs"></div>
+<div id="card"></div>
+<div class="sec"><h2 id="secTitle"></h2><a href="#">规则说明 ›</a></div>
+<div id="list"></div>
+<div id="cta"></div>
+<details class="more"><summary>全部等级对比</summary><div class="tbl" id="tbl"></div>
+<p class="note">橙色是你当前的等级；返水按大类给比例，各平台以奖励中心明细为准</p></details>
+</div>
+<div class="toast" id="toast">领取成功</div>
+
+<script>
+// 示例数据：VIP1~VIP3 取自设计稿，VIP4 以上为示意值
+const L=[
+{n:'VIP1',need:0,up:0,bd:0,rr:3,rc:50,rb:[.5,.5,1,.6,.1],wc:5,wa:20000,svc:0},
+{n:'VIP2',need:2000,up:28,bd:28,rr:4,rc:200,rb:[.6,.6,1.1,.7,.1],wc:8,wa:40000,svc:0},
+{n:'VIP3',need:10000,up:88,bd:88,rr:5,rc:600,rb:[.7,.65,1.2,.8,.15],wc:8,wa:80000,svc:1},
+{n:'VIP4',need:50000,up:288,bd:288,rr:6,rc:1500,rb:[.8,.7,1.3,.9,.2],wc:10,wa:150000,svc:1},
+{n:'VIP5',need:200000,up:888,bd:888,rr:7,rc:3000,rb:[.9,.8,1.4,1,.25],wc:15,wa:300000,svc:1},
+{n:'SVIP',need:1000000,up:2888,bd:2888,rr:8,rc:8000,rb:[1,.9,1.5,1.1,.3],wc:20,wa:1000000,svc:1}
+];
+const RB=['体育','真人','老虎机','捕鱼','彩票'];
+const CUR=1, DEP=2000, KEEP='2027-02-11', CHECK='2026-12-01';
+let sel=CUR, claimed=false;
+const m=v=>'RM '+v.toLocaleString('en-US');
+const w=v=>v>=10000?(v/10000)+' 万':v.toLocaleString('en-US');
+const plus=(a,b,f)=>b>a?`<span class="plus">+${f?f(b-a):b-a}</span>`:'';
+const firstSvc=L.findIndex(x=>x.svc);
+
+function tabs(){
+document.getElementById('tabs').innerHTML=L.map((x,i)=>
+`<div class="tab ${i===sel?'on':''}" onclick="go(${i})">${x.n}${i===CUR?'<span class="me">我</span>':''}</div>`).join('');
+}
+function card(){
+const x=L[sel],c=L[CUR];let h='';
+if(sel===CUR){
+const nx=L[CUR+1],p=Math.min(100,DEP/nx.need*100);
+h=`<div class="card"><div class="sub">当前等级 · 保级到 ${KEEP}</div>
+<h1>${x.n}<span class="badge b-cur">当前</span></h1>
+<div class="prog"><div class="row"><span>升${nx.n} · 本月存款</span><b>${DEP.toLocaleString()} / ${nx.need.toLocaleString()}</b></div>
+<div class="bar"><i style="width:${p}%"></i></div>
+<div class="tip">再存 ${m(nx.need-DEP)} 升${nx.n} · 可以跨级</div></div>
+<div class="keep">按现在的累计，${CHECK} 检查能保住等级</div></div>`;
+}else if(sel>CUR){
+const p=Math.min(100,DEP/x.need*100);
+h=`<div class="card high"><div class="sub">升级条件 · 本月存款 ${m(x.need)}</div>
+<h1>${x.n}<span class="badge b-lock">未达成</span></h1>
+<div class="prog"><div class="row"><span>本月存款</span><b>${DEP.toLocaleString()} / ${x.need.toLocaleString()}</b></div>
+<div class="bar"><i style="width:${p}%"></i></div>
+<div class="tip">再存 ${m(x.need-DEP)} 升${x.n}${sel-CUR>1?' · 可以跨级':''}</div></div></div>`;
+}else{
+h=`<div class="card low"><div class="sub">升级条件 · 本月存款 ${x.need?m(x.need):'注册即享'}</div>
+<h1>${x.n}<span class="badge b-ok">已达成</span></h1></div>`;
+}
+document.getElementById('card').innerHTML=h;
+}
+function row(ic,color,name,desc,val,st){
+return `<div class="item"><div class="ic" style="background:${color}">${ic}</div>
+<div class="mid"><div class="n">${name}</div><div class="d">${desc}</div></div>
+<div class="right"><div class="v">${val}</div>${st||''}</div></div>`;
+}
+function list(){
+const x=L[sel],c=L[CUR],me=sel===CUR,hi=sel>CUR;
+document.getElementById('secTitle').textContent=me?'我的福利':x.n+' 福利';
+const S=(cls,t,on)=>`<span class="st ${cls}" ${on?`onclick="${on}"`:''}>${t}</span>`;
+const d=(a,b,f)=>hi?plus(a,b,f):'';
+let h=`<div class="group">${me?'可领取':'奖励'}</div>`;
+// 升级奖金
+let st=me?(claimed?S('done','已领取'):S('go','领取','claim()')):'';
+h+=row('升','#f97316','升级奖金','进主钱包 · 打码 3 倍',x.up?m(x.up)+d(c.up,x.up,m):'—',st);
+// 生日礼金
+st=me?S('','生日当月可领'):'';
+h+=row('生','#ec4899','生日礼金','进主钱包 · 打码 2 倍',x.bd?m(x.bd)+d(c.bd,x.bd,m):'—',st);
+// 救援金
+st=me?S('','每周一发放'):'';
+h+=row('救','#ef4444','每周救援金',`上周净输 ${x.rr}% · 封顶 ${m(x.rc)} · 打码 3 倍`,
+m(x.rc)+d(c.rc,x.rc,m),st);
+h+=`<div class="group">等级特权</div>`;
+// 返水
+const rb=RB.map((t,i)=>`<span>${t} <b>${x.rb[i]}%</b>${hi&&x.rb[i]>c.rb[i]?'<span class="plus">↑</span>':''}</span>`).join('');
+h+=`<div class="item"><div class="ic" style="background:#16a34a">返</div>
+<div class="mid"><div class="n">返水 <span style="font-size:11px;color:#8a92a3;font-weight:400">每日自动发放 · 打码 1 倍</span></div><div class="rb">${rb}</div></div></div>`;
+// 提款
+st=me?S('','一直有效'):'';
+h+=row('提','#3b82f6','每日提款',`每日 ${x.wc} 次${hi?plus(c.wc,x.wc,v=>v+' 次'):''}`,m(x.wa)+d(c.wa,x.wa,m),st);
+// 专属客服
+if(x.svc) st=me?S('done','联系客服'):(hi&&!c.svc?S('lock','本级解锁'):'');
+else st=S('lock',L[firstSvc].n+' 解锁');
+h+=row('客','#64748b','专属客服','一对一专属服务',x.svc?'✓':'—',st);
+document.getElementById('list').innerHTML=h;
+document.getElementById('cta').innerHTML=hi?`<button class="cta">去存款 · 再存 ${m(x.need-DEP)} 升${x.n}</button>`:'';
+}
+function tbl(){
+const rows=[
+['升级（本月存款）',x=>x.need?x.need.toLocaleString():'—'],
+['升级奖金',x=>x.up||'—'],['生日礼金',x=>x.bd||'—'],
+['救援金（比例·封顶）/周',x=>x.rr+'% · '+x.rc],
+...RB.map((t,i)=>[t+'返水',x=>x.rb[i]+'%']),
+['每日提款（次·额度）',x=>x.wc+' · '+x.wa.toLocaleString()],
+['专属客服',x=>x.svc?'✓':'—']];
+document.getElementById('tbl').innerHTML='<table><tr><th></th>'+
+L.map((x,i)=>`<th class="${i===CUR?'hl':''}">${x.n}</th>`).join('')+'</tr>'+
+rows.map(r=>'<tr><td>'+r[0]+'</td>'+L.map((x,i)=>`<td class="${i===CUR?'hl':''}">${r[1](x)}</td>`).join('')+'</tr>').join('')+'</table>';
+}
+function go(i){sel=i;tabs();card();list();}
+function claim(){claimed=true;list();const t=document.getElementById('toast');t.style.display='block';setTimeout(()=>t.style.display='none',1200);}
+go(CUR);tbl();
+</script>
+</body>
+</html>
