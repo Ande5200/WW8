@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>存款页 · 优化原型</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#e9ebef;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;display:flex;justify-content:center;padding:20px 0;color:#1f2330}
+.phone{width:390px;height:844px;background:#f4f5f7;border-radius:28px;overflow:hidden;position:relative;box-shadow:0 10px 40px rgba(0,0,0,.25);display:flex;flex-direction:column}
+.top{flex:none;display:flex;align-items:center;gap:12px;padding:14px 16px;background:#fff;font-size:17px;font-weight:600}
+.top .r{margin-left:auto;display:flex;gap:10px}
+.cir{width:34px;height:34px;border-radius:50%;background:#f0f1f4;display:grid;place-items:center;font-size:14px}
+.body{flex:1;overflow-y:auto;padding:12px 12px 110px}
+.step{display:flex;align-items:center;gap:8px;margin:14px 2px 10px;font-size:16px;font-weight:700}
+.step i{font-style:normal;width:20px;height:20px;border-radius:50%;background:#f97316;color:#fff;font-size:12px;display:grid;place-items:center}
+.step small{margin-left:auto;font-size:12px;color:#8a92a3;font-weight:400}
+.amt{background:#fff;border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:8px;border:1.5px solid #f97316}
+.amt span{font-size:14px;color:#8a92a3}.amt input{flex:1;border:0;outline:0;font-size:22px;font-weight:700}
+.amt em{font-style:normal;font-size:12px;color:#8a92a3}
+.chips{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.chip{background:#fff;border-radius:10px;padding:10px 0;text-align:center;font-weight:600;font-size:15px;border:1.5px solid transparent;cursor:pointer}
+.chip.on{border-color:#f97316;color:#f97316;background:#fff7ef}
+/* 付款方式：一行 3 个 */
+.pays{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pay{position:relative;background:#fff;border-radius:12px;padding:12px 4px 10px;text-align:center;border:1.5px solid transparent;cursor:pointer}
+.pay.on{border-color:#f97316;background:#fff7ef}
+.pay .lg{width:34px;height:34px;border-radius:9px;margin:0 auto 6px;display:grid;place-items:center;color:#fff;font-size:12px;font-weight:800}
+.pay .nm{font-size:13px;font-weight:600}
+.pay .tg{position:absolute;top:-7px;right:-3px;font-size:10px;color:#fff;padding:1px 6px;border-radius:8px}
+.pay .ck{position:absolute;right:0;bottom:0;width:18px;height:18px;border-radius:10px 0 10px 0;background:#f97316;color:#fff;font-size:11px;display:none;place-items:center}
+.pay.on .ck{display:grid}
+.payinfo{margin-top:8px;background:#fff;border-radius:10px;padding:10px 12px;font-size:12px;color:#5b6475;line-height:1.6}
+.payinfo b{color:#1f2330}
+/* 选优惠：收起成一行 */
+.promo{background:#fff;border-radius:12px;padding:14px;display:flex;align-items:center;gap:10px;cursor:pointer;border:1.5px solid #eef0f3}
+.promo.sel{border-color:#f97316;background:#fff7ef}
+.promo .gift{width:34px;height:34px;border-radius:9px;background:#fde7d3;display:grid;place-items:center;font-size:18px}
+.promo .t{font-size:15px;font-weight:600}.promo .s{font-size:12px;color:#8a92a3;margin-top:2px}
+.promo .ar{margin-left:auto;font-size:13px;color:#f97316;white-space:nowrap}
+.hint{font-size:12px;color:#8a92a3;margin:8px 4px 0}
+/* 固定底部 */
+.bar{position:absolute;left:0;right:0;bottom:0;background:#fff;padding:10px 14px 18px;box-shadow:0 -4px 16px rgba(0,0,0,.06);z-index:5}
+.bar .sum{display:flex;justify-content:space-between;font-size:12px;color:#5b6475;margin-bottom:8px}
+.bar .sum b{color:#16a34a}
+.btn{width:100%;border:0;border-radius:26px;padding:14px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(90deg,#fb923c,#f97316);cursor:pointer}
+/* 弹窗 */
+.mask{position:absolute;inset:0;background:rgba(0,0,0,.45);z-index:10;display:none}
+.sheet{position:absolute;left:0;right:0;bottom:0;max-height:78%;background:#f4f5f7;border-radius:18px 18px 0 0;z-index:11;display:none;flex-direction:column}
+.show .mask{display:block}.show .sheet{display:flex}
+.sh-h{flex:none;padding:16px;text-align:center;font-weight:700;font-size:16px;position:relative;background:#fff;border-radius:18px 18px 0 0}
+.sh-h .x{position:absolute;right:16px;top:14px;font-size:20px;color:#8a92a3;cursor:pointer}
+.sh-h small{display:block;font-size:12px;color:#8a92a3;font-weight:400;margin-top:2px}
+.sh-b{flex:1;overflow-y:auto;padding:12px}
+.op{background:#fff;border-radius:12px;padding:12px 14px;margin-bottom:8px;border:1.5px solid transparent;display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.op.on{border-color:#f97316;background:#fff7ef}
+.op .rd{flex:none;width:18px;height:18px;border-radius:50%;border:1.5px solid #c5cad3;margin-top:2px}
+.op.on .rd{border:5px solid #f97316}
+.op .t{font-size:15px;font-weight:600}.op .s{font-size:12px;color:#8a92a3;margin-top:3px}
+.op .gain{font-size:12px;color:#16a34a;margin-top:3px}
+.op .rule{margin-left:auto;font-size:12px;color:#2563eb;white-space:nowrap}
+.op.dis{opacity:.5;cursor:default}.op.dis .why{font-size:12px;color:#ef4444;margin-top:3px}
+.fold{font-size:13px;color:#8a92a3;text-align:center;padding:8px;cursor:pointer}
+.sh-f{flex:none;background:#fff;padding:10px 14px 18px;box-shadow:0 -4px 16px rgba(0,0,0,.06)}
+</style>
+</head>
+<body>
+<div class="phone" id="ph">
+<div class="top"><span class="cir">☰</span>我的钱包<div class="r"><span class="cir">☎</span><span class="cir">⌚</span></div></div>
+
+<div class="body">
+<div class="step"><i>1</i>存多少<small>单笔 RM 50 – 30,000</small></div>
+<div class="amt"><span>RM</span><input id="amt" value="200" inputmode="numeric" oninput="calc()"><em>最低 50</em></div>
+<div class="chips" id="chips"></div>
+
+<div class="step"><i>2</i>怎么付<small>上次用的：USDT</small></div>
+<div class="pays" id="pays"></div>
+<div class="payinfo" id="payinfo"></div>
+
+<div class="step"><i>3</i>选优惠<small>可不选</small></div>
+<div class="promo" id="promo" onclick="openSheet()"></div>
+<p class="hint" id="pcount"></p>
+</div>
+
+<div class="bar">
+<div class="sum"><span id="sumL"></span><span id="sumR"></span></div>
+<button class="btn" id="payBtn"></button>
+</div>
+
+<div class="mask" onclick="closeSheet()"></div>
+<div class="sheet">
+<div class="sh-h">选择优惠<small id="shSub"></small><span class="x" onclick="closeSheet()">×</span></div>
+<div class="sh-b" id="opts"></div>
+<div class="sh-f"><button class="btn" onclick="confirmPromo()">确定</button></div>
+</div>
+</div>
+
+<script>
+const CHIPS=[50,100,200,500,1000,3000,5000,10000];
+const PAYS=[
+{id:'duitnow',n:'DuitNow QR',c:'#e11d48',lg:'QR',tag:'推荐',tc:'#f97316',d:'扫码付',t:'约 1 分钟到账'},
+{id:'fpx',n:'网银 FPX',c:'#1e3a8a',lg:'FPX',d:'选银行登录付',t:'约 1 分钟到账'},
+{id:'ewallet',n:'电子钱包',c:'#2563eb',lg:'TNG',tag:'最快',tc:'#16a34a',d:'TNG / Boost / GrabPay',t:'约 1 分钟到账'},
+{id:'bank',n:'银行转账',c:'#334155',lg:'BANK',d:'转到指定账户 + 上传凭证',t:'约 5 分钟到账'},
+{id:'usdt',n:'USDT',c:'#14b8a6',lg:'₮',tag:'上次',tc:'#64748b',d:'TRC20 / ERC20 / BEP20',t:'约 10 分钟到账'}
+];
+// 示例活动：ok=false 表示当前不可参加
+const PROMOS=[
+{id:'p1',n:'每日存款加赠 10%',rate:10,max:288,turn:5,min:50,ok:true},
+{id:'p2',n:'真人周末存送 20%',rate:20,max:888,turn:10,min:100,ok:true},
+{id:'p3',n:'体育次存 50%',rate:50,max:1000,turn:15,min:200,ok:true},
+{id:'p4',n:'老虎机欢迎首充 100%',rate:100,max:588,turn:20,min:50,ok:false,why:'该活动在当前周期已领取过'},
+{id:'p5',n:'VIP3 专属存送',rate:30,max:2000,turn:8,min:500,ok:false,why:'VIP3 及以上可参加'},
+];
+let pay='duitnow', promo=null, tmp=null, showDis=false;
+const amt=()=>Number(document.getElementById('amt').value)||0;
+const fmt=v=>v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const bonus=p=>p?Math.min(Math.floor(amt()*p.rate/100),p.max):0;
+const okFor=p=>p.ok&&amt()>=p.min;
+
+function chips(){document.getElementById('chips').innerHTML=CHIPS.map(v=>
+`<div class="chip ${amt()===v?'on':''}" onclick="setAmt(${v})">${v.toLocaleString()}</div>`).join('');}
+function setAmt(v){document.getElementById('amt').value=v;calc();}
+function pays(){
+document.getElementById('pays').innerHTML=PAYS.map(p=>`<div class="pay ${pay===p.id?'on':''}" onclick="pay='${p.id}';calc()">
+${p.tag?`<span class="tg" style="background:${p.tc}">${p.tag}</span>`:''}
+<div class="lg" style="background:${p.c}">${p.lg}</div><div class="nm">${p.n}</div><span class="ck">✓</span></div>`).join('');
+const p=PAYS.find(x=>x.id===pay);
+document.getElementById('payinfo').innerHTML=`<b>${p.n}</b>：${p.d} · ${p.t} · 免手续费`;
+}
+function promoRow(){
+const el=document.getElementById('promo'),n=PROMOS.filter(okFor).length;
+if(promo&&!okFor(promo))promo=null; // 改金额后不满足条件，自动取消
+if(promo){
+el.className='promo sel';
+el.innerHTML=`<div class="gift">🎁</div><div><div class="t">${promo.n}</div>
+<div class="s">送 RM ${fmt(bonus(promo))} · 打码 ${promo.turn} 倍</div></div><span class="ar">更换 ›</span>`;
+}else{
+el.className='promo';
+el.innerHTML=`<div class="gift">🎁</div><div><div class="t">不参加优惠</div>
+<div class="s">${n} 个优惠可参加</div></div><span class="ar">去选择 ›</span>`;
+}
+document.getElementById('pcount').textContent='每笔存款只能参加 1 个优惠';
+}
+function bar(){
+const a=amt(),b=bonus(promo);
+document.getElementById('sumL').innerHTML=`到账 RM ${fmt(a)}`+(b?` + 奖金 <b>RM ${fmt(b)}</b>`:'');
+document.getElementById('sumR').textContent=PAYS.find(x=>x.id===pay).n;
+document.getElementById('payBtn').textContent=`去付款 RM ${fmt(a)}`;
+}
+function opts(){
+const ok=PROMOS.filter(okFor),no=PROMOS.filter(p=>!okFor(p));
+document.getElementById('shSub').textContent=`本次存款 RM ${fmt(amt())}`;
+let h=`<div class="op ${!tmp?'on':''}" onclick="pick(null)"><span class="rd"></span><div><div class="t">不参加优惠</div></div></div>`;
+h+=ok.map(p=>`<div class="op ${tmp&&tmp.id===p.id?'on':''}" onclick="pick('${p.id}')"><span class="rd"></span>
+<div><div class="t">${p.n}</div><div class="s">${p.rate}% · 最高 ${p.max} · 打码 ${p.turn} 倍 · 最低存 ${p.min}</div>
+<div class="gain">本次可得 RM ${fmt(bonus(p))}</div></div><span class="rule">规则 ›</span></div>`).join('');
+if(no.length){
+h+=`<div class="fold" onclick="showDis=!showDis;opts()">${showDis?'收起':'查看'}不可参加的优惠（${no.length}）${showDis?'▲':'▼'}</div>`;
+if(showDis)h+=no.map(p=>`<div class="op dis"><span class="rd"></span><div><div class="t">${p.n}</div>
+<div class="s">${p.rate}% · 最高 ${p.max} · 打码 ${p.turn} 倍</div>
+<div class="why">${p.ok?'最低存款 RM '+p.min:p.why}</div></div></div>`).join('');
+}
+document.getElementById('opts').innerHTML=h;
+}
+function pick(id){tmp=id?PROMOS.find(p=>p.id===id):null;opts();}
+function openSheet(){tmp=promo;showDis=false;opts();document.getElementById('ph').classList.add('show');}
+function closeSheet(){document.getElementById('ph').classList.remove('show');}
+function confirmPromo(){promo=tmp;closeSheet();calc();}
+function calc(){chips();pays();promoRow();bar();}
+calc();
+</script>
+</body>
+</html>
